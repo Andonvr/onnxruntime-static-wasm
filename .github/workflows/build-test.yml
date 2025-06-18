@@ -22,41 +22,60 @@ permissions:
 jobs:
   echo:
     runs-on: ubuntu-latest
-    name: ${{ matrix.version }} - ${{ matrix.var }}
+    name: Build with emsdk version - ${{ matrix.emsdk_version }}
     strategy:
       fail-fast: false # show all errors for each platform (vs. cancel jobs on error)
       matrix:
-        version: [1, 2, 69]
-        var: [foo, bar]
+        emsdk_version: ['4.0.6']
 
     steps:
-      # A simple printout of the matrix
-      - name: printout
-        shell: bash
-        run: |
-          echo ${{ github.ref }}
-          echo "matrix.version=${{ matrix.version }}";
-          echo "matrix.var=${{ matrix.var }}";
-
       # With this we checkout to our repo
       - name: get repo and submodules
         uses: actions/checkout@v4
         with:
           submodules: 'recursive' # This will checkout all submodules recursively
 
+      - name: Get the onnx-runtime version
+        run: |
+          cd onnxruntime
+          TAG=$(git describe --tags --abbrev=0)
+          echo "ONNX Runtime Version: $TAG"
+          echo "ONNX_VERSION=$TAG" >> $GITHUB_ENV
+
+      - name: 'Build ONNX-Runtime'
+        shell: bash
+        run: |
+          cd onnxruntime
+          ./build.sh \
+              --build_dir ./build \
+              --config Release \
+              --build_wasm_static_lib \
+              --enable_wasm_simd \
+              --enable_wasm_threads \
+              --skip_tests \
+              --disable_rtti \
+              --parallel \
+              --emsdk_version {{ matrix.emsdk_version }} \
+              --skip_submodule_sync \
+              --cmake_extra_defines CMAKE_CXX_FLAGS="-sNO_DISABLE_EXCEPTION_CATCHING -Wno-deprecated-literal-operator -Wno-dangling-capture"
+
       # Declaring the product name and the packaging directory
       - name: declare artefact variables
         shell: bash
         run: |
-          echo "PACKAGE_DIR=${{ env.SOME_ENV }}-${{ matrix.version}}-${{ matrix.var}}" >> $GITHUB_ENV
-          echo "PRODUCT_NAME=${{ env.SOME_ENV }}-${{ matrix.version }}-${{ matrix.var}}" >> $GITHUB_ENV
+          echo "PACKAGE_DIR=onnx-${{ env.ONNX_VERSION }}-emsdk-${{ matrix.emsdk_version}}" >> $GITHUB_ENV
+          echo "PRODUCT_NAME=onnx-${{ env.ONNX_VERSION }}-emsdk-${{ matrix.emsdk_version}}" >> $GITHUB_ENV
 
-      # Moving the artefacts to a packaging directory
-      - name: move artefacts
+      # Moving the build to a packaging directory
+      - name: move build
         shell: bash
         run: |
           mkdir -p ${{ env.PACKAGE_DIR }}
-          echo "${{ env.SOME_ENV }} | ${{ matrix.version}} | ${{ matrix.var}}" > ${{ env.PACKAGE_DIR }}/newfile.txt
+          cp onnxruntime/build/Release/libonnxruntime_webassembly.a ${{ env.PACKAGE_DIR }}/libonnxruntime_webassembly.a
+          cp onnxruntime/include/onnxruntime/core/session/onnxruntime_c_api.h ${{ env.PACKAGE_DIR }}/onnxruntime_c_api.h
+          cp onnxruntime/include/onnxruntime/core/session/onnxruntime_cxx_api.h ${{ env.PACKAGE_DIR }}/onnxruntime_cxx_api.h
+          cp onnxruntime/include/onnxruntime/core/session/onnxruntime_cxx_inline.h ${{ env.PACKAGE_DIR }}/onnxruntime_cxx_inline.h
+          cp onnxruntime/include/onnxruntime/core/session/onnxruntime_float16.h ${{ env.PACKAGE_DIR }}/onnxruntime_float16.h
 
       # Zip the artefact
       - name: zip artefacts
