@@ -53,7 +53,7 @@ jobs:
               --skip_tests \
               --disable_rtti \
               --parallel \
-              --emsdk_version {{ matrix.emsdk_version }} \
+              --emsdk_version ${{ matrix.emsdk_version }} \
               --skip_submodule_sync \
               --cmake_extra_defines CMAKE_CXX_FLAGS="-sNO_DISABLE_EXCEPTION_CATCHING -Wno-deprecated-literal-operator -Wno-dangling-capture"
 
