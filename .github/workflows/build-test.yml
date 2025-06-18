@@ -20,6 +20,7 @@ env:
 
 jobs:
   echo:
+    runs-on: ubuntu-latest
     name: ${{ matrix.version }} - ${{ matrix.var }}
     strategy:
       fail-fast: false # show all errors for each platform (vs. cancel jobs on error)
