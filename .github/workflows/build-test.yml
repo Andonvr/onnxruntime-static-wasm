@@ -43,6 +43,7 @@ jobs:
       - name: 'Build ONNX-Runtime'
         shell: bash
         run: |
+          cd onnxruntime
           ./build.sh \
               --build_dir ./build \
               --config Release \
