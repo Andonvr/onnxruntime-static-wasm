@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false # show all errors for each platform (vs. cancel jobs on error)
       matrix:
-        emsdk_version: ['4.0.4']
+        emsdk_version: ['4.0.6']
 
     steps:
       # With this we checkout to our repo
@@ -36,7 +36,7 @@ jobs:
       - name: Get the onnxruntime version
         run: |
           cd onnxruntime
-          TAG=$(git describe --tags --abbrev=0)
+          TAG=v1.23.0
           echo "ONNX Runtime Version: $TAG"
           echo "ONNX_VERSION=$TAG" >> $GITHUB_ENV
 
