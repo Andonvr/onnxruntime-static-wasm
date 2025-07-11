@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false # show all errors for each platform (vs. cancel jobs on error)
       matrix:
-        emsdk_version: ['4.0.4', '4.0.3']
+        emsdk_version: ['4.0.8', '4.0.7', '4.0.6', '4.0.5', '4.0.4', '4.0.3']
 
     steps:
       # With this we checkout to our repo
@@ -43,7 +43,9 @@ jobs:
       - name: 'Build ONNX-Runtime'
         shell: bash
         run: |
-          cd onnxruntime
+          cd onnxruntime/cmake/external/emsdk
+          git checkout tags/${{ matrix.emsdk_version }}
+          cd ../../../
           ./build.sh \
               --build_dir ./build \
               --config Release \
@@ -53,6 +55,7 @@ jobs:
               --skip_tests \
               --disable_rtti \
               --emsdk_version ${{ matrix.emsdk_version }} \
+              --skip_submodule_sync \
               --cmake_extra_defines CMAKE_CXX_FLAGS="-sNO_DISABLE_EXCEPTION_CATCHING -Wno-deprecated-literal-operator -Wno-dangling-capture"
 
       # Declaring the product name and the packaging directory
