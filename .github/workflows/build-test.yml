@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false # show all errors for each platform (vs. cancel jobs on error)
       matrix:
-        emsdk_version: ['4.0.6']
+        emsdk_version: ['4.0.8', '4.0.7']
 
     steps:
       # With this we checkout to our repo
