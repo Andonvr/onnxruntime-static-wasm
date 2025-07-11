@@ -36,7 +36,7 @@ jobs:
       - name: Get the onnxruntime version
         run: |
           cd onnxruntime
-          TAG=v1.23.0
+          TAG=$(git describe --tags --abbrev=0)
           echo "ONNX Runtime Version: $TAG"
           echo "ONNX_VERSION=$TAG" >> $GITHUB_ENV
 
