@@ -18,7 +18,7 @@ permissions:
 
 jobs:
   build-onnxruntime:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     name: Build with emsdk version - ${{ matrix.emsdk_version }}
     strategy:
       fail-fast: false # show all errors for each platform (vs. cancel jobs on error)
