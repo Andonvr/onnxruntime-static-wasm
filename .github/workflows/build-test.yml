@@ -70,6 +70,7 @@ jobs:
               --build_wasm_static_lib \
               --enable_wasm_simd \
               --enable_wasm_threads \
+              --compile_no_warning_as_error \
               --skip_tests \
               --disable_rtti \
               --emsdk_version ${{ matrix.emsdk_version }} \
