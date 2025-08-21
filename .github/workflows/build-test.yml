@@ -70,7 +70,6 @@ jobs:
               --build_wasm_static_lib \
               --enable_wasm_simd \
               --use_jsep \
-              --use_webnn \
               --enable_wasm_threads \
               --compile_no_warning_as_error \
               --skip_tests \
