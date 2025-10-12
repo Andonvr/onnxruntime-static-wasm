@@ -94,6 +94,8 @@ jobs:
           cp onnxruntime/include/onnxruntime/core/session/onnxruntime_cxx_api.h ${{ env.PACKAGE_DIR }}/onnxruntime_cxx_api.h
           cp onnxruntime/include/onnxruntime/core/session/onnxruntime_cxx_inline.h ${{ env.PACKAGE_DIR }}/onnxruntime_cxx_inline.h
           cp onnxruntime/include/onnxruntime/core/session/onnxruntime_float16.h ${{ env.PACKAGE_DIR }}/onnxruntime_float16.h
+          cp onnxruntime/LICENSE ${{ env.PACKAGE_DIR }}/LICENSE
+          cp onnxruntime/ThirdPartyNotices.txt ${{ env.PACKAGE_DIR }}/ThirdPartyNotices.txt
 
       # Zip the artefact
       - name: zip artefacts
