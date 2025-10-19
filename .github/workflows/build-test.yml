@@ -74,9 +74,8 @@ jobs:
               --disable_rtti \
               --emsdk_version ${{ matrix.emsdk_version }} \
               --skip_submodule_sync \
-              --cmake_extra_defines onnxruntime_BUILD_UNIT_TESTS=OFF \ 
+              --cmake_extra_defines onnxruntime_BUILD_UNIT_TESTS=OFF \
                                     CMAKE_CXX_FLAGS="-sNO_DISABLE_EXCEPTION_CATCHING -Wno-deprecated-literal-operator -Wno-dangling-capture"
-
       # Declaring the product name and the packaging directory
       - name: declare artefact variables
         shell: bash
